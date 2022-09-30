@@ -6,8 +6,8 @@ from collections import defaultdict as dicts
 minimum support seems to be less than 1%, otherwise there will left a null set.
 '''
 
-file_path = './inputs/project1_testing_dataset.csv'
-min_sup = 0.003
+# file_path = './inputs/project1_testing_dataset.csv'
+# min_sup = 0.005
 
 def csv2table(file,min_sup):
     with open(file,newline='') as csvfile:
@@ -33,4 +33,4 @@ def csv2table(file,min_sup):
     # print(table1.items())
     return table1,sup
 
-csv2table(file_path,min_sup)
+# csv2table(file_path,min_sup)
