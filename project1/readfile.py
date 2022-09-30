@@ -7,7 +7,7 @@ minimum support seems to be less than 1%, otherwise there will left a null set.
 '''
 
 file_path = './inputs/project1_testing_dataset.csv'
-min_sup = 0.005
+min_sup = 0.003
 
 def csv2table(file,min_sup):
     with open(file,newline='') as csvfile:
@@ -20,7 +20,7 @@ def csv2table(file,min_sup):
         table[l[0]].append(l[-1])
         sup[l[-1]] += 1
     sup = dict(filter(lambda a:a[1]/total_num>=min_sup,sup.items()))
-    sup = dict(sorted(sup.items(),key=lambda i:i[1]).reverse())
+    sup = dict(sorted(sup.items(),key=lambda i:-i[1]))
     print(sup)
 
     for k in table.keys():
