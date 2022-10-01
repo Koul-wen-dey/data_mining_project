@@ -11,4 +11,4 @@ a = {
 b = fp()
 for trans in a.items():
     b.update_tree(trans[1])
-b.show_result(b.root)
+b.show_result()

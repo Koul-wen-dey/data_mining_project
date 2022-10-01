@@ -21,7 +21,7 @@ def csv2table(file,min_sup):
         sup[l[-1]] += 1
     sup = dict(filter(lambda a:a[1]/total_num>=min_sup,sup.items()))
     sup = dict(sorted(sup.items(),key=lambda i:-i[1]))
-    print(sup)
+    # print(sup)
 
     for k in table.keys():
         table[k] = list(filter(lambda s:s in sup.keys(),table[k]))

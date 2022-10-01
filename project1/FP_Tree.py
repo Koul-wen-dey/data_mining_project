@@ -31,14 +31,18 @@ class FP_tree():
     def update_header(self):
         pass
 
-    def show_result(self,tmp:tree_node):
+    def build(self):
+        for transaction in self.table.items():
+            self.update_tree(transaction[1])
+
+    def inorder_print(self,tmp:tree_node):
         print(tmp.item,tmp.count)
         for t in tmp.children.values():
-            self.show_result(t)
-        
+            self.inorder_print(t)
 
-    def build(self,file,min_sup):
+    def show_result(self):
+        self.inorder_print(self.root)
+
+    def get_table(self,file:str,min_sup:float):
         self.table, self.header = readfile.csv2table(file,min_sup)
-        for transaction in self.table.items():
-            for item in transaction:
-                self.update_tree(item[1])
+
