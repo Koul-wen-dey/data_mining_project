@@ -11,6 +11,6 @@ min_con = 0
 
 if '__main__' == __name__:
     ft = FP_tree()
-    ft.get_table(file_path,min_sup)
+    ft.get_table(file_path, min_sup)
     ft.build()
-    ft.show_result()
+    # ft.show_result()
