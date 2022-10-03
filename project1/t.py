@@ -20,6 +20,16 @@ a = {
     8: ['bread', 'milk', 'egg', 'beer'],
     9: ['bread', 'milk', 'egg']
 }
+'''
+a = {
+    1:['br','mi','ve','fr','eg'],
+    2:['no','be','po','wa','so','gl','sh','ri'],
+    3:['so','gl'],
+    4:['br','mi','sh','so','eg'],
+    5:['so','sh','sw','ca','mi','ve','gl'],
+    6:['eg','br','mi','cr','sh','ri']
+}
+'''
 c = {
     'bread': 7,
     'milk': 6,
@@ -31,6 +41,6 @@ b = fp()
 b.table = a
 b.header = c
 b.build()
-# b.mining_pattern()
+b.mining_pattern()
 # print(b.pattern)
-b.show_result()
+# b.show_result()

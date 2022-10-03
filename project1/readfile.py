@@ -11,7 +11,7 @@ minimum support seems to be less than 1%, otherwise there will left a null set.
 
 def csv2table(file,min_sup):
     with open(file,newline='') as csvfile:
-        lists = [list(map(int,row)) for row in csv.reader(csvfile,delimiter=',')]
+        lists = [list(map(str,row)) for row in csv.reader(csvfile,delimiter=',')]
     table = dicts(list)
     sup = dicts(lambda:0)
     total_num = len(lists)
@@ -20,7 +20,7 @@ def csv2table(file,min_sup):
         table[l[0]].append(l[-1])
         sup[l[-1]] += 1
     sup = dict(filter(lambda a:a[1]/total_num>=min_sup,sup.items()))
-    sup = dict(sorted(sup.items(),key=lambda i:-i[1]))
+    sup = dict(sorted(sup.items(),key=lambda i:i[1],reverse=True))
     # print(sup)
 
     for k in table.keys():
@@ -28,7 +28,7 @@ def csv2table(file,min_sup):
     table1 = dict(filter(lambda v:v[1],table.items()))
 
     for k in table.keys():
-        table[k].sort(key=lambda x:sup[x])
+        table[k].sort(key=lambda x:(sup[x],x))
         table[k].reverse()
     # print(table1.items())
     return table1,sup
