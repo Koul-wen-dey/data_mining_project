@@ -18,7 +18,6 @@ class FP_tree():
     def __init__(self,support=3,confidence=0.6):
         self.header = {}
         self.root = tree_node(0, 1, None)
-        self.threshold = 2
         self.min_support = support
         self.min_confidence = confidence
 
@@ -45,12 +44,9 @@ class FP_tree():
             self.header[h] = [self.header[h], None]
         for transaction in self.table.items():
             self.update_tree(transaction[1])
-        for i in self.header.items():
-            print(i)
 
     def get_table(self, file: str):
-        # self.sup = min_sup
-        table1, header1,total_num = readfile.csv2table(file)
+        table1, header1,self.total_num = readfile.csv2table(file)
 
         # filter with minimum support and sort supports
         header1 = dict(filter(lambda a:a[1]>=self.min_support,header1.items()))
@@ -87,7 +83,8 @@ class FP_tree():
             return
         self.frequent_pattern = []
         tmp = set()
-        
+        self.frequency = readfile.dicts(lambda:0)
+
         for value in reversed(self.header.items()):
             patterns = readfile.dicts(lambda:0)
             node_now = value[1][1]
@@ -98,27 +95,50 @@ class FP_tree():
                     patterns[i] += 1
             patterns = dict(filter(lambda v:v[1]>=self.min_support,patterns.items()))
             prefixs = list(patterns.keys())
+            num = patterns[prefixs[0]]
 
             for i in range(1,len(prefixs)+1):
                 cb = combinations(prefixs,i)
                 for j in cb:
                     tmp.add(frozenset(j))
+                    self.frequency[frozenset(j)] = num if num > self.frequency[frozenset(j)] else self.frequency[frozenset(j)]
+                   
         for fp in tmp:
             self.frequent_pattern.append(fp)
-        for fp in self.frequent_pattern:
-            print(fp)
 
-    def find_rule(self,fp:tuple,current_fp:tuple):
-        for item in current_fp:
-            sub = 0
-            confidence = self.frequent_pattern[fp]/self.frequent_pattern[sub]
-        pass
+
+    def find_rule(self,fp:frozenset,current_fp:frozenset):
+
+        def remove_target(item,current_fp:frozenset):
+            tmp = list()
+            for cfp in current_fp:
+                if cfp != item:
+                    tmp.append(cfp)
+            return frozenset(tmp)
+
+        powerset = set()
+        for i in range(1,len(fp)+1):
+            cb = list(combinations(fp,i))
+            for j in cb:
+                powerset.add(frozenset(j))
+
+        for p in powerset:
+            others = fp - p
+            for i in range(1,len(others)+1):
+                cb = list(combinations(others,i))
+                for j in cb:
+                    confidence = self.frequency[frozenset.union(p,frozenset(j))] / self.frequency[p]
+                    if confidence >= self.min_confidence:
+                        self.rules.add((p,frozenset(j),confidence))
 
     def generate_rules(self):
-        self.rules = []
+        self.rules = set()
         for fp in self.frequent_pattern:
             if len(fp) > 1:
                 self.find_rule(fp,fp)
+        
+        for r in self.rules:
+            print(r)
             
 
     def inorder_print(self, tmp: tree_node):

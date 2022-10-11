@@ -42,12 +42,10 @@ for k in a.keys():
     a[k] = list(filter(lambda s:s in c.keys(),a[k]))
 for k in a.keys():
     a[k].sort(key=lambda x:(c[x],x),reverse=True)
-print(a)
-print(c)
+
 b = fp()
 b.table = a
 b.header = c
 b.build()
 b.mining_pattern()
-# print(b.pattern)
-# b.show_result()
+b.generate_rules()
