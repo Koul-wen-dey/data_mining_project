@@ -15,10 +15,12 @@ class tree_node:
 
 
 class FP_tree():
-    def __init__(self):
+    def __init__(self,support=3,confidence=0.6):
         self.header = {}
         self.root = tree_node(0, 1, None)
         self.threshold = 2
+        self.min_support = support
+        self.min_confidence = confidence
 
     def update_header(self, head: tree_node, tail: tree_node):
         while head.link is not None:
@@ -38,30 +40,31 @@ class FP_tree():
                     self.update_header(self.header[i][1], tmp.children[i])
             tmp = tmp.children[i]
 
-    def update_cond(self, item:list):
-        tmp = self.root
-        for i in item:
-            if i in tmp.children.keys():
-                tmp.children[i].increase()
-            else:
-                tmp.children[i] = tree_node(i,1,tmp)
-            tmp = tmp.children[i]
-
-
     def build(self):
         for h in self.header.keys():
             self.header[h] = [self.header[h], None]
         for transaction in self.table.items():
             self.update_tree(transaction[1])
-        # print(self.header)
+        for i in self.header.items():
+            print(i)
 
-    def get_table(self, file: str, min_sup: float):
-        self.sup = min_sup
-        self.table, self.header = readfile.csv2table(file, min_sup)
+    def get_table(self, file: str):
+        # self.sup = min_sup
+        table1, header1,total_num = readfile.csv2table(file)
 
-    def find_fp(self,prefix):
+        # filter with minimum support and sort supports
+        header1 = dict(filter(lambda a:a[1]>=self.min_support,header1.items()))
+        self.header = dict(sorted(header1.items(),key=lambda i:i[1],reverse=True))
 
-        pass
+        # filter table with supports and filter null list transection
+        for k in table1.keys():
+            table1[k] = list(filter(lambda s:s in self.header.keys(),table1[k]))
+        self.table = dict(filter(lambda v:v[1],table1.items()))
+
+        # sort elements in transection with support
+        for k in self.table.keys():
+            self.table[k].sort(key=lambda x:(self.header[x],x),reverse=True)
+
 
     def find_prefix(self,node:tree_node):
         patterns=[]
@@ -82,7 +85,8 @@ class FP_tree():
     def mining_pattern(self):
         if len(self.header) == 0:
             return
-        self.frequent_pattern = set()
+        self.frequent_pattern = []
+        tmp = set()
         
         for value in reversed(self.header.items()):
             patterns = readfile.dicts(lambda:0)
@@ -92,16 +96,29 @@ class FP_tree():
             for p in prefixs:
                 for i in p:
                     patterns[i] += 1
-            patterns = dict(filter(lambda v:v[1]>=self.threshold,patterns.items()))
+            patterns = dict(filter(lambda v:v[1]>=self.min_support,patterns.items()))
             prefixs = list(patterns.keys())
 
             for i in range(1,len(prefixs)+1):
                 cb = combinations(prefixs,i)
                 for j in cb:
-                    self.frequent_pattern.add(j)
+                    tmp.add(frozenset(j))
+        for fp in tmp:
+            self.frequent_pattern.append(fp)
         for fp in self.frequent_pattern:
             print(fp)
 
+    def find_rule(self,fp:tuple,current_fp:tuple):
+        for item in current_fp:
+            sub = 0
+            confidence = self.frequent_pattern[fp]/self.frequent_pattern[sub]
+        pass
+
+    def generate_rules(self):
+        self.rules = []
+        for fp in self.frequent_pattern:
+            if len(fp) > 1:
+                self.find_rule(fp,fp)
             
 
     def inorder_print(self, tmp: tree_node):

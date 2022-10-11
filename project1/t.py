@@ -1,4 +1,5 @@
 from FP_Tree import FP_tree as fp
+from collections import defaultdict as dicts
 '''
 a = {
     1: ['z', 'r'],
@@ -8,7 +9,7 @@ a = {
     5: ['z', 'x', 'y', 'r', 't'],
     6: ['z', 'x', 'y', 's', 't']
 }
-'''
+
 a = {
     1: ['bread', 'milk', 'beer'],
     2: ['bread', 'coffee'],
@@ -22,21 +23,27 @@ a = {
 }
 '''
 a = {
-    1:['br','mi','ve','fr','eg'],
-    2:['no','be','po','wa','so','gl','sh','ri'],
-    3:['so','gl'],
-    4:['br','mi','sh','so','eg'],
-    5:['so','sh','sw','ca','mi','ve','gl'],
-    6:['eg','br','mi','cr','sh','ri']
+    1:['bread','milk','vegetable','fruit','eggs'],
+    2:['noodle','beef','pork','water','socks','gloves','shoes','rice'],
+    3:['socks','gloves'],
+    4:['bread','milk','shoes','socks','eggs'],
+    5:['socks','shoes','sweater','cap','milk','vegetable','gloves'],
+    6:['eggs','bread','milk','crab','shrimp','rice']
 }
-'''
-c = {
-    'bread': 7,
-    'milk': 6,
-    'egg': 6,
-    'coffee': 2,
-    'beer': 2
-}
+
+c = dicts(lambda:0)
+for i in a.keys():
+    for j in a[i]:
+        c[j] += 1
+
+c = dict(filter(lambda a:a[1]>2,c.items()))
+c = dict(sorted(c.items(),key=lambda i:i[1],reverse=True))
+for k in a.keys():
+    a[k] = list(filter(lambda s:s in c.keys(),a[k]))
+for k in a.keys():
+    a[k].sort(key=lambda x:(c[x],x),reverse=True)
+print(a)
+print(c)
 b = fp()
 b.table = a
 b.header = c
