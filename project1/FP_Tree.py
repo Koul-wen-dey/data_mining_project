@@ -1,4 +1,5 @@
 import readfile
+import csv
 from itertools import combinations
 
 
@@ -15,7 +16,7 @@ class tree_node:
 
 
 class FP_tree():
-    def __init__(self,support=3,confidence=0.6):
+    def __init__(self,support=0.002,confidence=0.6):
         self.header = {}
         self.root = tree_node(0, 1, None)
         self.min_support = support
@@ -47,9 +48,9 @@ class FP_tree():
 
     def get_table(self, file: str):
         table1, header1,self.total_num = readfile.csv2table(file)
-
+        # print(self.total_num)
         # filter with minimum support and sort supports
-        header1 = dict(filter(lambda a:a[1]>=self.min_support,header1.items()))
+        header1 = dict(filter(lambda a:a[1]/self.total_num>=self.min_support,header1.items()))
         self.header = dict(sorted(header1.items(),key=lambda i:i[1],reverse=True))
 
         # filter table with supports and filter null list transection
@@ -61,6 +62,7 @@ class FP_tree():
         for k in self.table.keys():
             self.table[k].sort(key=lambda x:(self.header[x],x),reverse=True)
 
+        print(self.header)
 
     def find_prefix(self,node:tree_node):
         patterns=[]
@@ -93,7 +95,7 @@ class FP_tree():
             for p in prefixs:
                 for i in p:
                     patterns[i] += 1
-            patterns = dict(filter(lambda v:v[1]>=self.min_support,patterns.items()))
+            patterns = dict(filter(lambda v:v[1]/self.total_num>=self.min_support,patterns.items()))
             prefixs = list(patterns.keys())
             num = patterns[prefixs[0]]
 
@@ -127,19 +129,33 @@ class FP_tree():
             for i in range(1,len(others)+1):
                 cb = list(combinations(others,i))
                 for j in cb:
-                    confidence = self.frequency[frozenset.union(p,frozenset(j))] / self.frequency[p]
+                    confidence = round(self.frequency[frozenset.union(p,frozenset(j))] / self.frequency[p],3)
                     if confidence >= self.min_confidence:
-                        self.rules.add((p,frozenset(j),confidence))
+                        # print(frozenset.union(p,frozenset(j)))
+                        support = round(self.frequency[frozenset.union(p,frozenset(j))] / self.total_num,3)
+                        lift = round(confidence / (self.frequency[frozenset(j)]/self.total_num),3)
+                        self.rules.add((p,frozenset(j),support,confidence,lift))
 
     def generate_rules(self):
         self.rules = set()
+        # print(self.frequent_pattern)
         for fp in self.frequent_pattern:
             if len(fp) > 1:
                 self.find_rule(fp,fp)
         
         for r in self.rules:
+            # if r[3] != 1:
             print(r)
-            
+        # for i in self.frequency.items():
+            # print(i[0],i[1])
+    
+    def writecsv(self):
+        with open('outputs/output1.csv','w',newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(['antecedent','consequent','support','confidence','lift'])
+            writer.writerow(['{123 456}'])
+            csvfile.close()
+
 
     def inorder_print(self, tmp: tree_node):
         print(tmp.item, tmp.count)

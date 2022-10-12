@@ -2,9 +2,6 @@ import csv
 from collections import defaultdict as dicts
 
 
-'''
-minimum support seems to be less than 1%, otherwise there will left a null set.
-'''
 
 # file_path = './inputs/project1_testing_dataset.csv'
 # min_sup = 0.005
@@ -15,7 +12,7 @@ def csv2table(file):
         lists = [list(map(str,row)) for row in csv.reader(csvfile,delimiter=',')]
     table = dicts(list)
     sup = dicts(lambda:0)
-    total_num = len(lists)
+    # total_num = len(lists)
 
     # make transection and count elements number
     for l in lists:
@@ -36,6 +33,6 @@ def csv2table(file):
         table1[k].sort(key=lambda x:(sup[x],x),reverse=True)
     print(table1.items())
     '''
-    return table, sup, total_num
+    return table, sup, len(table)
 
 # csv2table(file_path,min_sup)
