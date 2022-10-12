@@ -59,6 +59,7 @@ print()
 ap = AP(support=0.5)
 ap.table = a
 ap.header = c
-for t in ap.table.items():
-    print(t)
+ap.total_num = 6
+# for t in ap.table.items():
+    # print(t)
 ap.build()

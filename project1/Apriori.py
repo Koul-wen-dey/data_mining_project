@@ -17,12 +17,19 @@ class AP():
         # print(self.table)
     def build(self):
         k = 2
+        tmptable = [i for i in self.table.values()]
         while True:
             tmpset = set()
-            for item in self.table.items():
-                cb = combinations(item[1],k)
+            tmpfrq = readfile.dicts(lambda:0)
+            for item in tmptable:
+                cb = combinations(item,k)
                 for c in cb:
-                    tmpset.add(c)
+                    # tmpset.add(c)
+                    tmpfrq[c]+=1
+            rmfrq = dict(filter(lambda x:x[1]/self.total_num<self.min_support,tmpfrq.items()))
+            tmpfrq = dict(filter(lambda x:x[1]/self.total_num>=self.min_support,tmpfrq.items()))
+            # for tmp
+
             break
-        # for t in tmpset:
-            # print(t)
+        for t in rmfrq.items():
+            print(t)
