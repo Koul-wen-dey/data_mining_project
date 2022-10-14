@@ -62,8 +62,7 @@ class FP_tree():
         for k in self.table.keys():
             self.table[k].sort(key=lambda x:(self.header[x],x),reverse=True)
 
-        print(self.header)
-
+        
     def find_prefix(self,node:tree_node):
         patterns=[]
         while node is not None:
@@ -86,7 +85,8 @@ class FP_tree():
         self.frequent_pattern = []
         tmp = set()
         self.frequency = readfile.dicts(lambda:0)
-
+        for h in self.header.items():
+            self.frequency[frozenset({h[0]})] = h[1][0]
         for value in reversed(self.header.items()):
             patterns = readfile.dicts(lambda:0)
             node_now = value[1][1]
@@ -107,7 +107,22 @@ class FP_tree():
                    
         for fp in tmp:
             self.frequent_pattern.append(fp)
+        
+        # for f in self.frequent_pattern:
+            # if 59841 in f or 51834 in f:
+                # print(f,self.frequency[f])
 
+    def mining_pattern2(self):
+        if len(self.header) == 0:
+            return
+        self.frequent_pattern = []
+        tmp = set()
+        self.frequency = readfile.dicts(lambda:0)
+
+        for value in reversed(self.header.items()):
+            patterns = readfile.dicts(lambda:0)
+            node_now = value[1][1]
+            prefixs = self.find_prefix(node_now)
 
     def find_rule(self,fp:frozenset,current_fp:frozenset):
 
@@ -117,37 +132,35 @@ class FP_tree():
                 if cfp != item:
                     tmp.append(cfp)
             return frozenset(tmp)
-
+        if current_fp != frozenset({51834,59841}):
+            return
         powerset = set()
         for i in range(1,len(fp)+1):
             cb = list(combinations(fp,i))
             for j in cb:
                 powerset.add(frozenset(j))
-
+        
         for p in powerset:
             others = fp - p
             for i in range(1,len(others)+1):
                 cb = list(combinations(others,i))
                 for j in cb:
                     confidence = round(self.frequency[frozenset.union(p,frozenset(j))] / self.frequency[p],3)
+                    
                     if confidence >= self.min_confidence:
-                        # print(frozenset.union(p,frozenset(j)))
                         support = round(self.frequency[frozenset.union(p,frozenset(j))] / self.total_num,3)
                         lift = round(confidence / (self.frequency[frozenset(j)]/self.total_num),3)
                         self.rules.add((p,frozenset(j),support,confidence,lift))
 
     def generate_rules(self):
         self.rules = set()
-        # print(self.frequent_pattern)
         for fp in self.frequent_pattern:
             if len(fp) > 1:
                 self.find_rule(fp,fp)
         
         for r in self.rules:
-            # if r[3] != 1:
             print(r)
-        # for i in self.frequency.items():
-            # print(i[0],i[1])
+
     
     def writecsv(self):
         with open('outputs/output1.csv','w',newline='') as csvfile:

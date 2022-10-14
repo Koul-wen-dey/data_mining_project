@@ -56,10 +56,10 @@ b.mining_pattern()
 b.generate_rules()
 print()
 '''
-ap = AP(support=0.5)
-ap.table = a
-ap.header = c
-ap.total_num = 6
+# ap = AP(support=0.5)
+# ap.table = a
+# ap.header = c
+# ap.total_num = 6
 # for t in ap.table.items():
     # print(t)
-ap.build()
+# ap.build()
