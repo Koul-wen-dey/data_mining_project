@@ -10,13 +10,13 @@ import args
 if '__main__' == __name__:
     a = args.parse_args()
     file_path = 'inputs/'+ a.dataset
-    ft = FP_tree(support=a.min_sup,confidence=a.min_conf)
-    ft.get_table(file_path)
-    ft.build()
-    ft.mining_pattern()
-    ft.generate_rules()
-    ft.writecsv(a.dataset)
+    # ft = FP_tree(support=a.min_sup,confidence=a.min_conf)
+    # ft.get_table(file_path)
+    # ft.build()
+    # ft.mining_pattern()
+    # ft.generate_rules()
+    # ft.writecsv(a.dataset)
     
-    # ap = AP(support=a.min_sup,confidence=a.min_conf)
-    # ap.get_table(file_path)
+    ap = AP(support=a.min_sup,confidence=a.min_conf)
+    ap.get_table(file_path)
     # ap.build()
