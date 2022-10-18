@@ -45,7 +45,9 @@ class FP_tree():
             self.header[h] = [self.header[h], None]
         for transaction in self.table.items():
             self.update_tree(transaction[1])
-
+        # for h in self.header.items():
+            # print(h)
+        
     def get_table(self, file: str):
         table1, header1,self.total_num = readfile.csv2table(file)
         # print(self.total_num)
@@ -62,6 +64,8 @@ class FP_tree():
         for k in self.table.keys():
             self.table[k].sort(key=lambda x:(self.header[x],x),reverse=True)
 
+        # for h in self.header.items():
+            # print(h)
         
     def find_prefix(self,node:tree_node):
         patterns=[]
@@ -109,8 +113,7 @@ class FP_tree():
             self.frequent_pattern.append(fp)
         
         # for f in self.frequent_pattern:
-            # if 59841 in f or 51834 in f:
-                # print(f,self.frequency[f])
+            # print(f)
 
     def mining_pattern2(self):
         if len(self.header) == 0:
@@ -132,8 +135,7 @@ class FP_tree():
                 if cfp != item:
                     tmp.append(cfp)
             return frozenset(tmp)
-        if current_fp != frozenset({51834,59841}):
-            return
+        
         powerset = set()
         for i in range(1,len(fp)+1):
             cb = list(combinations(fp,i))
@@ -162,11 +164,21 @@ class FP_tree():
             print(r)
 
     
-    def writecsv(self):
-        with open('outputs/output1.csv','w',newline='') as csvfile:
+    def writecsv(self,filename:str):
+        filename = 'outputs/' + filename.split('.')[0] + '-fp_growth.csv'
+        with open(filename,'w',newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(['antecedent','consequent','support','confidence','lift'])
-            writer.writerow(['{123 456}'])
+            for r in self.rules:
+                tmp = ''
+                for i in r[0]:
+                    tmp = tmp + str(i) + ' '
+                tmp = '{' + tmp[:-1] + '}'
+                tmp2 = ''
+                for i in r[1]:
+                    tmp2 = tmp2 + str(i) + ' '
+                tmp2 = '{' + tmp2[:-1] + '}'
+                writer.writerow([tmp, tmp2,r[2],r[3],r[4]])
             csvfile.close()
 
 

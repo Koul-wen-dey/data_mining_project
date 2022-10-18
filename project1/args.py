@@ -6,8 +6,8 @@ def parse_args():
     def a(*args, **kwargs):
         p.add_argument(*args, **kwargs)
 
-    a('--min_sup', type=float, default=0.002, help='Minimum support')
-    a('--min_conf', type=float, default=0.002, help='Minimum confidence')
-    a('--dataset', type=str, default='ibm-2022-release.csv', help='Dataset to use, please include the extension')
+    a('--min_sup', type=float, default=0.3, help='Minimum support')
+    a('--min_conf', type=float, default=0.6, help='Minimum confidence')
+    a('--dataset', type=str, default='2022-DM-release-testdata-2.csv', help='Dataset to use, please include the extension')
 
     return p.parse_args()
