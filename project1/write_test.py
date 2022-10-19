@@ -55,8 +55,10 @@ def apriori(dataSet, minSupport=0.5):
     C1 = createC1(dataSet)
     # 對每一行進行 set 轉換，然後存放到集合中
     D = list(map(set, dataSet))
+    
     # 計算候選資料集C1在資料集D中的支援度，並返回支援度大於minSupport 的資料
     L1, supportData = scanD(D, C1, minSupport)
+    # print(L1,supportData)
     # L 加了一層 list, L一共 2 層 list
     L = [L1];k = 2
     # 判斷L第k-2項的資料長度是否>0即頻繁項集第一項。第一次執行時 L 為 [[frozenset([1]), frozenset([3]), frozenset([2]), frozenset([5])]]。L[k-2]=L[0]=[frozenset([1]), frozenset([3]), frozenset([2]), frozenset([5])]，最後面 k += 1
@@ -74,7 +76,7 @@ def apriori(dataSet, minSupport=0.5):
         # l=[[set(1), set(2), set(3)], [set(1, 2), set(2, 3)]]
         L.append(Lk)
         k += 1
-        print(len(D))
+        # print(len(D))
     return L, supportData
 
 def testApriori():
@@ -84,8 +86,8 @@ def testApriori():
 
     # Apriori 演算法生成頻繁項集以及它們的支援度
     L1, supportData1 = apriori(dataSet, minSupport=0.7)
-    # print ('L(0.7): ', L1)
-    # print ('supportData(0.7): ', supportData1)
+    print ('L(0.7): ', L1)
+    print ('supportData(0.7): ', supportData1)
 
 def calcConf(freqSet, H, supportData, brl, minConf=0.7):
     # 記錄可信度大於最小可信度（minConf）的集合

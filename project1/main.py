@@ -17,6 +17,9 @@ if '__main__' == __name__:
     # ft.generate_rules()
     # ft.writecsv(a.dataset)
     
-    ap = AP(support=a.min_sup,confidence=a.min_conf)
+    ap = AP(support=0.7,confidence=a.min_conf)
     ap.get_table(file_path)
+    ap.build()
+    print(ap.frequent_pattern)
+    print(ap.header)
     # ap.build()
