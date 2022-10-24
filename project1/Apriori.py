@@ -11,16 +11,13 @@ class AP():
         self.header = {}
 
     def get_table(self, file: str):
-        # table1 = {1: [1, 3, 4], 2: [2, 3, 5], 3: [1, 2, 3, 5], 4: [2, 5]}
-        # self.total_num = 4
-        # header1 = {1: 2, 2: 3, 3: 3, 4: 1, 5: 3}
         table1, header1, self.total_num = readfile.csv2table(file)
         self.table = []
         for t in table1.items():
             self.table.append(frozenset(t[1]))
         for h in header1.items():
             self.header[frozenset({h[0]})] = h[1]/self.total_num
-            # print(self.header)
+
 
     def filter_candidate(self, Ck: list):
         freq = readfile.dicts(lambda: 0)
@@ -32,7 +29,6 @@ class AP():
 
         for k in freq.keys():
             sup = freq[k]/self.total_num
-            # print(freq[k], self.total_num, sup)
             if sup >= self.min_support:
                 result.append(k)
             self.header[k] = sup

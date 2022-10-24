@@ -22,6 +22,4 @@ if '__main__' == __name__:
     ap.build()
     ap.generate_rules()
     ap.writecsv(a.dataset)
-    # print(ap.frequent_pattern)
-    # print(ap.header)
-    # ap.build()
+    
