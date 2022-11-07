@@ -16,7 +16,7 @@ import sklearn.utils
     血糖 : <126為正常
     收縮壓 : <120為正常
     舒張壓 : <80為正常
-    資料格式 : (性別,年齡,身高,體重,FFMI,腰圍,居住地,血糖,收縮壓,舒張壓,風險)
+    資料格式 : (性別,年齡,身高,體重,FFMI,腰圍,居住地,血糖,收縮壓,舒張壓,標籤)
         Sex : 1/0 (Male/Female)
         Age : 18 ~ 75
         Height : 1.35 ~ 1.95(meter)
@@ -27,7 +27,7 @@ import sklearn.utils
         Glucose : 80 ~ 140
         Systolic : 100 ~ 140
         Diastolic : 70 ~ 90
-        Risk : 0/1 (no/yes)
+        Label : 0/1 (no/yes)
     規則 : 
         1.BMI超標，且體脂率超標為真
         2.BMI適中或低標，且腰圍超標為真
@@ -39,7 +39,7 @@ import sklearn.utils
 
 num = 10000
 additional = 6000
-feature = ['Sex','Age','Height','Weight','FFMI','Waistline','Residence','Glucose','Systolic','Diastolic','Risk']
+feature = ['Sex','Age','Height','Weight','FFMI','Waistline','Residence','Glucose','Systolic','Diastolic','Label']
 dataset = pd.DataFrame(columns=feature)
 for i in range(num):
     sex = random.choice([1,0])
